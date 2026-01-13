@@ -224,12 +224,18 @@
                 src = wordImgFlag ? wordImgFlag.replace("&amp;", "&") : (img.getAttribute('_src') || img.getAttribute("src", 2).replace("&amp;", "&")),
                 align = editor.queryCommandValue("imageFloat");
 
+            $G('originalWidth').innerHTML = img.naturalWidth;
+            $G('originalHeight').innerHTML = img.naturalHeight;
+
+            var width = img.getAttribute("width") || img.style.width.replace("px", "") || '';
+            var height = img.getAttribute("height") || img.style.height.replace("px", "") || '';
+
             /* 防止onchange事件循环调用 */
             if (src !== $G("url").value) $G("url").value = src;
             if(src) {
                 /* 设置表单内容 */
-                $G("width").value = img.width || '';
-                $G("height").value = img.height || '';
+                $G("width").value = width;
+                $G("height").value = height;
                 $G("border").value = img.getAttribute("border") || '0';
                 $G("vhSpace").value = img.getAttribute("vspace") || '0';
                 $G("title").value = img.title || img.alt || '';

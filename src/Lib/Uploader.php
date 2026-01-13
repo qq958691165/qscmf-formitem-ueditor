@@ -21,6 +21,10 @@ class Uploader
     private $fileSize; //文件大小
     private $fileType; //文件类型
     private $stateInfo; //上传状态信息,
+    // 需要清空referer的域名
+    private $remote_save_no_referer_hosts = [
+        'mmecoa.qpic.cn',
+    ];
     private $stateMap = array( //上传状态映射表，国际化用户需考虑此处数据的国际化
         "SUCCESS", //上传成功标记，在UEditor中内不可改变，否则flash判断会出错
         "文件大小超出 upload_max_filesize 限制",
@@ -182,10 +186,16 @@ class Uploader
 
         //设置Referer破解防盗链
         $http_arr = parse_url($imgUrl);
+        $referer = $http_arr['scheme'] . '://' . $http_arr['host'];
+
+        //部分图片源无法访问
+        if (in_array($http_arr['host'], $this->remote_save_no_referer_hosts)){
+            $referer = '';        
+        }
 
         $client = new \GuzzleHttp\Client([
             'headers' => [
-                'Referer' => $http_arr['scheme'] . '://' . $http_arr['host'],
+                'Referer' => $referer,
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
             ]
         ]);

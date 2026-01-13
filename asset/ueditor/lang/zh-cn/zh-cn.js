@@ -261,6 +261,7 @@ UE.I18N['zh-cn'] = {
             'lang_tab_search':"图片搜索",
             'lang_input_url':"地 址：",
             'lang_input_size':"大 小：",
+            'lang_natural_size':"原 图：",
             'lang_input_width':"宽度",
             'lang_input_height':"高度",
             'lang_input_border':"边 框：",

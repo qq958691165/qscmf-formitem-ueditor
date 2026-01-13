@@ -3344,7 +3344,36 @@ var domUtils = dom.domUtils = {
                         node.className = value;
                         break;
                     case 'style' :
-                        node.style.cssText = node.style.cssText + ";" + value;
+                        function mergeCSS(styleStr1, styleStr2) {
+                            // 合并两个字符串并用分号连接
+                            const fullStr = `${styleStr1 || ''};${styleStr2 || ''}`;
+                            
+                            // 分割并解析
+                            const styles = {};
+                            const declarations = fullStr.split(';');
+                            
+                            declarations.forEach(decl => {
+                                const trimmed = decl.trim();
+                                if (trimmed) {
+                                    const colonIndex = trimmed.indexOf(':');
+                                    if (colonIndex > 0) {
+                                        const prop = trimmed.substring(0, colonIndex).trim();
+                                        const value = trimmed.substring(colonIndex + 1).trim();
+                                        if (prop && value) {
+                                            styles[prop] = value;
+                                        }
+                                    }
+                                }
+                            });
+                            
+                            // 重新构建字符串
+                            return Object.keys(styles)
+                                .map(prop => `${prop}:${styles[prop]}`)
+                                .join(';') + (Object.keys(styles).length ? ';' : '');
+                        }
+
+                        node.style.cssText = mergeCSS(node.style.cssText, value);
+                        // node.style.cssText = node.style.cssText + ";" + value;
                         break;
                     case 'innerHTML':
                         node[attr] = value;

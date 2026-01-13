@@ -17,7 +17,7 @@ class HandleOsResBehavior
                     , $custom_param['url_prefix'], $custom_param['url_suffix'], $custom_param),
                 "size" => $file_data["size"],
                 "title" => htmlspecialchars($file_data["title"]),
-                "original" => htmlspecialchars($file_data["title"]),
+                "original" => htmlspecialchars($file_data["original"]),
                 "source" => $file_data
             ];
 

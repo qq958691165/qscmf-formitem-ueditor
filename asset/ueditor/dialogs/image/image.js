@@ -234,8 +234,8 @@
             if (src !== $G("url").value) $G("url").value = src;
             if(src) {
                 /* 设置表单内容 */
-                $G("width").value = width;
-                $G("height").value = height;
+                $G("width").value = width || img.width;
+                $G("height").value = height || img.height;
                 $G("border").value = img.getAttribute("border") || '0';
                 $G("vhSpace").value = img.getAttribute("vspace") || '0';
                 $G("title").value = img.title || img.alt || '';

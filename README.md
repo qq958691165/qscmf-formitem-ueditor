@@ -93,3 +93,5 @@ composer require quansitech/qscmf-formitem-ueditor
   # 在项目.env文件中添加如下配置
   UEDITOR_WX_CRAWLER_PREFIX=https://【域名】/?url=
   ```
+
+  

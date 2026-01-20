@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {createScript} from "@quansitech/antd-admin/dist/lib/helpers";
 import {Spin} from "antd";
 import {ModalContext, ModalContextProps} from "@quansitech/antd-admin/dist/components/ModalContext";
-import {uniqueId} from "es-toolkit/compat";
+import {debounce, throttle, uniqueId} from "es-toolkit/compat";
 
 declare global {
     interface Window {
@@ -41,6 +41,7 @@ export default class Ueditor extends Component<ColumnProps & {
 
     editor: any = null
     containerRef: HTMLElement | null = null
+    contentChangeHandler: (() => void) | null = null
     state = {
         loading: true,
         containerId: uniqueId('ueditor_'),
@@ -57,7 +58,7 @@ export default class Ueditor extends Component<ColumnProps & {
             window.UE_LOADING_PROMISE =
                 createScript(this.props.fieldProps.configJsPath || this.props.fieldProps.ueditorPath + '/ueditor.config.js')
                     .then(() => {
-                        return createScript(this.props.fieldProps.ueditorPath + '/ueditor.all.js?v=250110')
+                        return createScript(this.props.fieldProps.ueditorPath + '/ueditor.all.js?v=260120')
                     })
                     .then(() => {
                         return createScript(this.props.fieldProps.ueditorPath + '/lang/zh-cn/zh-cn.js')
@@ -133,7 +134,7 @@ export default class Ueditor extends Component<ColumnProps & {
                                     });
                                 }
                             }
-                        }                        
+                        }
 
                         if (catchGo) {
                             //     $('.submit').trigger('startHandlePostData', '正在抓取图片');
@@ -316,9 +317,15 @@ export default class Ueditor extends Component<ColumnProps & {
                     this.props.fieldProps.onChange(this.editor?.getContent())
                 }
 
-                this.editor?.addListener('contentChange', () => {
+                // 监听内容变化
+                this.contentChangeHandler = debounce(() => {
                     this.props.fieldProps.onChange(this.editor?.getContent().trim())
+                }, 300);
+                this.editor?.addListener('contentChange selectionchange keyup afterpaste', this.contentChangeHandler)
+                this.editor?.addListener('fullscreenchanged', () => {
+                    this.contentChangeHandler && this.contentChangeHandler()
                 })
+
                 this.setState({loading: false})
             })
         })
@@ -332,7 +339,7 @@ export default class Ueditor extends Component<ColumnProps & {
     render() {
         return <ModalContext.Consumer>
             {
-                (modalContext: ModalContext) => {
+                (modalContext: ModalContextProps) => {
                     this.modalContext = modalContext
                     return <div ref={el => this.containerRef = el}>
                         <Spin spinning={this.state.loading}>

@@ -17185,8 +17185,25 @@ UE.plugins['fiximgclick'] = (function () {
                 resizer.innerHTML = hands.join('');
                 resizer.style.cssText += ';display:none;border:1px solid #3b77ff;z-index:' + (me.editor.options.zIndex) + ';';
 
-                me.editor.ui.getDom().appendChild(cover);
-                me.editor.ui.getDom().appendChild(resizer);
+                var container = me.editor.iframe.parentNode;
+                container.appendChild(cover);
+                container.appendChild(resizer);
+
+                me.editor.ui.getDom().style.overflow = 'hidden';
+                container.style.overflow = 'hidden';
+                container.style.position = 'relative';
+
+                var toolbar = document.getElementById(me.editor.ui.id + '_toolbarbox');
+                if (toolbar) {
+                    toolbar.style.zIndex = '10';
+                }
+
+                var bottombar = document.getElementById(me.editor.ui.id + '_bottombar');
+                if (bottombar) {
+                    bottombar.style.position = 'relative';
+                    bottombar.style.backgroundColor = '#fff';
+                    bottombar.style.zIndex = '10';
+                }
 
                 me.initStyle();
                 me.initEvents();
@@ -17283,7 +17300,7 @@ UE.plugins['fiximgclick'] = (function () {
             },
             _validScaledProp: function (prop, value) {
                 var ele = this.resizer,
-                    wrap = document;
+                    wrap = this.editor.iframe;
 
                 value = isNaN(value) ? 0 : value;
                 switch (prop) {
@@ -17343,16 +17360,19 @@ UE.plugins['fiximgclick'] = (function () {
             attachTo: function (targetObj) {
                 var me = this,
                     target = me.target = targetObj,
-                    resizer = this.resizer,
-                    imgPos = domUtils.getXY(target),
-                    iframePos = domUtils.getXY(me.editor.iframe),
-                    editorPos = domUtils.getXY(resizer.parentNode);
+                    resizer = this.resizer;
+
+                var editorPos = domUtils.getXY(me.editor.ui.getDom());
+                var iframePos = domUtils.getXY(me.editor.iframe);
+                var iframeDoc = me.editor.iframe.contentDocument || me.editor.iframe.contentWindow.document;
+                var scrollLeft = iframeDoc.documentElement.scrollLeft || iframeDoc.body.scrollLeft;
+                var scrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
 
                 domUtils.setStyles(resizer, {
                     'width': target.width + 'px',
                     'height': target.height + 'px',
-                    'left': iframePos.x + imgPos.x - me.editor.document.body.scrollLeft - editorPos.x - parseInt(resizer.style.borderLeftWidth) + 'px',
-                    'top': iframePos.y + imgPos.y - me.editor.document.body.scrollTop - editorPos.y - parseInt(resizer.style.borderTopWidth) + 'px'
+                    'left': (iframePos.x + target.offsetLeft - scrollLeft - editorPos.x) + 'px',
+                    'top': (iframePos.y + target.offsetTop - scrollTop - editorPos.y) + 'px'
                 });
             }
         }
@@ -17834,6 +17854,7 @@ UE.plugins['autofloat'] = function() {
         }
 
         toolbarBox.style.cssText = bakCssText;
+        toolbarBox.style.zIndex = '10';
     }
 
     function updateFloating(){

@@ -17193,18 +17193,6 @@ UE.plugins['fiximgclick'] = (function () {
                 container.style.overflow = 'hidden';
                 container.style.position = 'relative';
 
-                var toolbar = document.getElementById(me.editor.ui.id + '_toolbarbox');
-                if (toolbar) {
-                    toolbar.style.zIndex = '10';
-                }
-
-                var bottombar = document.getElementById(me.editor.ui.id + '_bottombar');
-                if (bottombar) {
-                    bottombar.style.position = 'relative';
-                    bottombar.style.backgroundColor = '#fff';
-                    bottombar.style.zIndex = '10';
-                }
-
                 me.initStyle();
                 me.initEvents();
             },
@@ -17819,10 +17807,12 @@ UE.plugins['autofloat'] = function() {
         docStyle.backgroundAttachment = 'fixed';
     }
     var	bakCssText,
+        bottomBakCssText,
         placeHolder = document.createElement('div'),
-        toolbarBox,orgTop,
+        toolbarBox, orgTop,
+        bottombar,
         getPosition,
-        flag =true;   //ie7模式下需要偏移
+        flag = true;   //ie7模式下需要偏移
     function setFloating(){
         var toobarBoxPos = domUtils.getXY(toolbarBox),
             origalFloat = domUtils.getComputedStyle(toolbarBox,'position'),
@@ -17855,6 +17845,12 @@ UE.plugins['autofloat'] = function() {
 
         toolbarBox.style.cssText = bakCssText;
         toolbarBox.style.zIndex = '10';
+        if (bottombar) {
+            bottombar.style.cssText = bottomBakCssText;
+            bottombar.style.position = 'relative';
+            bottombar.style.backgroundColor = '#fff';
+            bottombar.style.zIndex = '10';
+        }
     }
 
     function updateFloating(){
@@ -17886,7 +17882,13 @@ UE.plugins['autofloat'] = function() {
             toolbarBox = me.ui.getDom('toolbarbox');
             orgTop = getPosition(toolbarBox).top;
             bakCssText = toolbarBox.style.cssText;
+            if (bakCssText && !bakCssText.match(/z-index\s*:/i)) {
+                bakCssText += ';z-index:20';
+            }
+            toolbarBox.style.zIndex = '10';
             placeHolder.style.height = toolbarBox.offsetHeight + 'px';
+
+            bottombar = me.ui.getDom('bottombar');
             if(LteIE6){
                 fixIE6FixedPos();
             }

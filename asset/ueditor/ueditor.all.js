@@ -17398,6 +17398,8 @@ UE.plugins['fiximgclick'] = (function () {
                             if (ele && (ele.className===undefined || ele.className.indexOf('edui-editor-imagescale') == -1)) {
                                 _keyDownHandler(e);
                             }
+                        }, _scrollHandler = function (e) {
+                            imageScale.hide();
                         }, timer;
 
                         me.addListener('afterscaleshow', function (e) {
@@ -17405,6 +17407,8 @@ UE.plugins['fiximgclick'] = (function () {
                             me.addListener('beforemousedown', _mouseDownHandler);
                             domUtils.on(document, 'keydown', _keyDownHandler);
                             domUtils.on(document,'mousedown', _mouseDownHandler);
+                            domUtils.on(me.document, 'scroll', _scrollHandler);
+                            domUtils.on(me.window, 'scroll', _scrollHandler);
                             me.selection.getNative().removeAllRanges();
                         });
                         me.addListener('afterscalehide', function (e) {
@@ -17412,6 +17416,8 @@ UE.plugins['fiximgclick'] = (function () {
                             me.removeListener('beforemousedown', _mouseDownHandler);
                             domUtils.un(document, 'keydown', _keyDownHandler);
                             domUtils.un(document,'mousedown', _mouseDownHandler);
+                            domUtils.un(me.document, 'scroll', _scrollHandler);
+                            domUtils.un(me.window, 'scroll', _scrollHandler);
                             var target = imageScale.target;
                             if (target.parentNode) {
                                 me.selection.getRange().selectNode(target).select();
@@ -17844,12 +17850,12 @@ UE.plugins['autofloat'] = function() {
         }
 
         toolbarBox.style.cssText = bakCssText;
-        toolbarBox.style.zIndex = '10';
+        toolbarBox.style.zIndex = '2100';
         if (bottombar) {
             bottombar.style.cssText = bottomBakCssText;
             bottombar.style.position = 'relative';
             bottombar.style.backgroundColor = '#fff';
-            bottombar.style.zIndex = '10';
+            bottombar.style.zIndex = '2100';
         }
     }
 
@@ -17885,7 +17891,7 @@ UE.plugins['autofloat'] = function() {
             if (bakCssText && !bakCssText.match(/z-index\s*:/i)) {
                 bakCssText += ';z-index:20';
             }
-            toolbarBox.style.zIndex = '10';
+            toolbarBox.style.zIndex = '2100';
             placeHolder.style.height = toolbarBox.offsetHeight + 'px';
 
             bottombar = me.ui.getDom('bottombar');

@@ -61,7 +61,7 @@ export default class Ueditor extends Component<ColumnProps & {
                         return createScript(this.props.fieldProps.ueditorPath + '/ueditor.all.js?v=260331')
                     })
                     .then(() => {
-                        return createScript(this.props.fieldProps.ueditorPath + '/lang/zh-cn/zh-cn.js')
+                        return createScript(this.props.fieldProps.ueditorPath + '/lang/zh-cn/zh-cn.js?v=260514')
                     })
         }
 

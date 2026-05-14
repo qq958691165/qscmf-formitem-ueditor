@@ -56,7 +56,7 @@ export default class Ueditor extends Component<ColumnProps & {
 
         if (!window.UE && !window.UE_LOADING_PROMISE) {
             window.UE_LOADING_PROMISE =
-                createScript(this.props.fieldProps.configJsPath || this.props.fieldProps.ueditorPath + '/ueditor.config.js')
+                createScript(this.props.fieldProps.configJsPath || this.props.fieldProps.ueditorPath + '/ueditor.config.js?v=260514')
                     .then(() => {
                         return createScript(this.props.fieldProps.ueditorPath + '/ueditor.all.js?v=260331')
                     })

@@ -415,7 +415,7 @@
             header: [],
             hr: [],
             i: ['class', 'style'],
-            iframe: ['src', 'width', 'height', 'id', 'scrolling', 'seamless', 'frameborder', 'allowtransparency', 'class', 'style'],
+            iframe: ['src', 'width', 'height', 'id', 'scrolling', 'seamless', 'frameborder', 'allowtransparency', 'allowfullscreen', 'class', 'style'],
             img: ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class', 'style', 'data-latex'],
             ins: ['datetime'],
             li: ['class', 'style'],

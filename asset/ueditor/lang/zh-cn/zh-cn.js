@@ -374,6 +374,7 @@ UE.I18N['zh-cn'] = {
             'lang_input_height':'高度：',
             'lang_input_isScroll':'允许滚动条：',
             'lang_input_frameborder':'显示框架边框：',
+            'lang_input_allowfullscreen': '允许全屏：',
             'lang_input_alignMode':'对齐方式：',
             'align':{title:"对齐方式", options:["默认", "左对齐", "右对齐", "居中"]}
 
@@ -562,6 +563,7 @@ UE.I18N['zh-cn'] = {
             'lang_input_height':'高度：',
             'lang_input_isScroll':'允许滚动条：',
             'lang_input_frameborder':'显示框架边框：',
+            'lang_input_allowfullscreen': '允许全屏：',
             'lang_input_alignMode':'对齐方式：',
             'align':{title:"对齐方式", options:["默认", "左对齐", "右对齐", "居中"]}
         },

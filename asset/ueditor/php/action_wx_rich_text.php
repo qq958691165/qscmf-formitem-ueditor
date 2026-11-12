@@ -212,6 +212,8 @@ function isWxCrawlerPublicIp(string $ip): bool
         array('2002::', 16),
         array('3fff::', 20),
         array('64:ff9b::', 96),
+        array('64:ff9b:1::', 48),
+        array('5f00::', 16),
     );
     foreach ($deniedRanges as $range) {
         if (wxCrawlerIpInRange($binary, $range[0], $range[1])) {

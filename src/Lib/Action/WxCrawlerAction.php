@@ -285,9 +285,57 @@ EOF;
             return false;
         }
 
-        // PHP's global-range flag also accepts multicast addresses.
         $binary = inet_pton($ip);
-        return strlen($binary) === 4 ? ord($binary[0]) < 224 : ord($binary[0]) !== 0xff;
+        if ($binary === false) {
+            return false;
+        }
+
+        // PHP's global-range flag also accepts multicast addresses.
+        if (strlen($binary) === 4) {
+            return ord($binary[0]) < 224;
+        }
+
+        if (ord($binary[0]) === 0xff) {
+            return false;
+        }
+
+        // The global-range flag still accepts these non-public IPv6 blocks:
+        // fec0::/10 site-local (deprecated by RFC 3879), 2002::/16 6to4 and
+        // 64:ff9b::/96 NAT64 (both can embed a private IPv4 address),
+        // 3fff::/20 documentation (RFC 9637).
+        foreach (array(
+            array('fec0::', 10),
+            array('2002::', 16),
+            array('3fff::', 20),
+            array('64:ff9b::', 96),
+        ) as $range) {
+            if ($this->ipInRange($binary, $range[0], $range[1])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function ipInRange(string $binary, string $network, int $prefixLength): bool
+    {
+        $networkBinary = inet_pton($network);
+        if ($networkBinary === false || strlen($networkBinary) !== strlen($binary)) {
+            return false;
+        }
+
+        $wholeBytes = intdiv($prefixLength, 8);
+        if ($wholeBytes > 0 && strncmp($binary, $networkBinary, $wholeBytes) !== 0) {
+            return false;
+        }
+
+        $remainingBits = $prefixLength % 8;
+        if ($remainingBits === 0) {
+            return true;
+        }
+
+        $mask = (0xff << (8 - $remainingBits)) & 0xff;
+        return (ord($binary[$wholeBytes]) & $mask) === (ord($networkBinary[$wholeBytes]) & $mask);
     }
 
     private function errorResponse(int $status, string $message): string

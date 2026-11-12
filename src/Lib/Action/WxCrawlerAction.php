@@ -302,12 +302,15 @@ EOF;
         // The global-range flag still accepts these non-public IPv6 blocks:
         // fec0::/10 site-local (deprecated by RFC 3879), 2002::/16 6to4 and
         // 64:ff9b::/96 NAT64 (both can embed a private IPv4 address),
-        // 3fff::/20 documentation (RFC 9637).
+        // 3fff::/20 documentation (RFC 9637), 64:ff9b:1::/48 local-use NAT64
+        // (RFC 8215) and 5f00::/16 SRv6 SIDs (RFC 9602).
         foreach (array(
             array('fec0::', 10),
             array('2002::', 16),
             array('3fff::', 20),
             array('64:ff9b::', 96),
+            array('64:ff9b:1::', 48),
+            array('5f00::', 16),
         ) as $range) {
             if ($this->ipInRange($binary, $range[0], $range[1])) {
                 return false;
